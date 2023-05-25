@@ -29,11 +29,11 @@ use SebastianBergmann\CodeCoverage\Report\PHP;
  * Function that starts
  */
 function local_behatcoverage_after_config() {
-    if (defined('BEHAT_SITE_RUNNING')) {
-        if ($plugintocheck = getenv('BEHATCOVERAGEFOR')) {
+    // if (defined('BEHAT_SITE_RUNNING')) {
+        if ($plugintocheck = getenv('BEHAT_COVERAGE_FOR')) {
             local_behatcoverage_start_coverage($plugintocheck);
         }
-    }
+    // }
 }
 
 function local_behatcoverage_start_coverage($plugintocheck) {
