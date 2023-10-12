@@ -29,11 +29,16 @@ use SebastianBergmann\CodeCoverage\Report\PHP;
  * Function that starts
  */
 function local_behatcoverage_after_config() {
-    // if (defined('BEHAT_SITE_RUNNING')) {
-        if ($plugintocheck = getenv('BEHAT_COVERAGE_FOR')) {
-            local_behatcoverage_start_coverage($plugintocheck);
+    if (php_sapi_name() === 'cli') { // && !defined(CLI_SCRIPT)
+        return;
+    }
+    if ($plugintocheck = 'block_qrcode') {
+        try {
+        local_behatcoverage_start_coverage($plugintocheck);
+        } catch (Exception $e) {
+            echo $e->getMessage();
         }
-    // }
+    }
 }
 
 function local_behatcoverage_start_coverage($plugintocheck) {
