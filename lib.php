@@ -34,7 +34,7 @@ function local_behatcoverage_after_config() {
     }
     if ($plugintocheck = 'block_qrcode') {
         try {
-        local_behatcoverage_start_coverage($plugintocheck);
+            local_behatcoverage_start_coverage($plugintocheck);
         } catch (Exception $e) {
             echo $e->getMessage();
         }
@@ -67,6 +67,14 @@ function local_behatcoverage_start_coverage($plugintocheck) {
 
 function local_behatcoverage_shutdown(CodeCoverage $codecoverage) {
     global $CFG;
+
+    file_put_contents($CFG->dataroot . '/behatlogdata.log', json_encode([
+            'rootdir' => $CFG->rootdir,
+            'dataroot' => $CFG->dataroot,
+            'wwwroot' => $CFG->wwwroot,
+            'request_uri' => $_SERVER['REQUEST_URI'] ?? null,
+            'scriptname' => $_SERVER['SCRIPT_NAME'] ?? null
+    ]) . "\n", FILE_APPEND);
 
     $codecoverage->stop();
     $php = new PHP();
