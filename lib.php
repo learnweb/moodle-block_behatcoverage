@@ -54,10 +54,6 @@ function local_behatcoverage_start_coverage($plugintocheck) {
     $driver = (new \SebastianBergmann\CodeCoverage\Driver\Selector)->forLineCoverage($filter);
     $codecoverage = new CodeCoverage($driver, $filter);
     $codecoverage->includeUncoveredFiles();
-    if (file_exists($CFG->dataroot . '/behat.cov')) {
-        $past = include $CFG->dataroot . '/behat.cov';
-        $codecoverage->merge($past);
-    }
     core_shutdown_manager::register_function('local_behatcoverage_shutdown', [$codecoverage]);
     $codecoverage->start('behat');
 }
@@ -75,6 +71,12 @@ function local_behatcoverage_shutdown(CodeCoverage $codecoverage) {
     ]) . "\n", FILE_APPEND);
 
     $codecoverage->stop();
+
+    if (file_exists($CFG->dataroot . '/behat.cov')) {
+        $past = include $CFG->dataroot . '/behat.cov';
+        $codecoverage->merge($past);
+    }
+
     $php = new PHP();
     $php->process($codecoverage, $CFG->dataroot . '/behat.cov');
 }
