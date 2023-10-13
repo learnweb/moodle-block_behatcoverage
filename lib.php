@@ -29,9 +29,6 @@ use SebastianBergmann\CodeCoverage\Report\PHP;
  * Function that starts
  */
 function local_behatcoverage_after_config() {
-    if (php_sapi_name() === 'cli') { // && !defined(CLI_SCRIPT)
-        return;
-    }
     if ($plugintocheck = 'block_qrcode') {
         try {
             local_behatcoverage_start_coverage($plugintocheck);
@@ -69,11 +66,12 @@ function local_behatcoverage_shutdown(CodeCoverage $codecoverage) {
     global $CFG;
 
     file_put_contents($CFG->dataroot . '/behatlogdata.log', json_encode([
-            'rootdir' => $CFG->rootdir,
+            'rootdir' => $CFG->dirroot,
             'dataroot' => $CFG->dataroot,
             'wwwroot' => $CFG->wwwroot,
             'request_uri' => $_SERVER['REQUEST_URI'] ?? null,
-            'scriptname' => $_SERVER['SCRIPT_NAME'] ?? null
+            'scriptname' => $_SERVER['SCRIPT_NAME'] ?? null,
+            'sapiname' => php_sapi_name()
     ]) . "\n", FILE_APPEND);
 
     $codecoverage->stop();
